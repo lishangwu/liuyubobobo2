@@ -79,18 +79,24 @@ public class LinkedList<E> implements Linked<E> {
 
     }
 
+    //遍历是从index位置开始， 插入是找index前一位置
     @Override
     public E get(int index) {
 
         if(index < 0 || index > size)
             throw new IllegalArgumentException("Get Failed. Illegal index.");
 
-        Node cur = dummyHead;
+//        Node prev = dummyHead;
+//        for (int i = 0; i < index; i++) {
+//            prev = prev.next;
+//        }
+//
+//        return prev.next.e;
+        Node cur = dummyHead.next;
         for (int i = 0; i < index; i++) {
             cur = cur.next;
         }
-
-        return cur.next.e;
+        return cur.e;
     }
 
     @Override
@@ -120,11 +126,18 @@ public class LinkedList<E> implements Linked<E> {
     @Override
     public boolean contains(E e) {
 
-        Node prev = dummyHead;
-        while (prev.next != null){
-            if(prev.next.e.equals(e))
+//        Node prev = dummyHead;
+//        while (prev.next != null){
+//            if(prev.next.e.equals(e))
+//                return true;
+//            prev = prev.next;
+//        }
+        Node cur = dummyHead.next;
+        while (cur != null){
+            if(cur.e.equals(e)){
                 return true;
-            prev = prev.next;
+            }
+            cur = cur.next;
         }
 
         return false;

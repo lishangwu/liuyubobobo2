@@ -17,7 +17,7 @@ public interface Array<E> {
     E removeFirst();
     E removeLast();
     void removeElement(E e);
-    void resize(int newCapacity);
+//    void resize(int newCapacity);
     void swap(int i, int j);
     void print();
 }

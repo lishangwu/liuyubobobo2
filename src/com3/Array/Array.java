@@ -121,8 +121,8 @@ public class Array<E> implements AInterface.Array<E> {
 
     @Override
     public E remove(int index) {
-        if(index < 0 || index > size)
-            throw new IllegalArgumentException("Remove failed. Required index>=0 && index<=size");
+        if(index < 0 || index >= size)
+            throw new IllegalArgumentException("Remove failed. Required index>=0 && index<size");
 
         E ret = data[index];
         for(int i=index+1; i<size; i++){
@@ -130,6 +130,7 @@ public class Array<E> implements AInterface.Array<E> {
         }
 
         size --;
+        data[size] = null;//
 
         if(size == data.length/4 && data.length/2 != 0)
             resize(data.length/2);
@@ -154,8 +155,7 @@ public class Array<E> implements AInterface.Array<E> {
             remove(index);
     }
 
-    @Override
-    public void resize(int newCapacity) {
+    private void resize(int newCapacity) {
         E[] newData = (E[]) new Object[newCapacity];
         for (int i = 0; i < size; i++) {
             newData[i] = data[i];
