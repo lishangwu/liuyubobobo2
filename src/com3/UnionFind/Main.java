@@ -2,18 +2,14 @@
  * Created by IntelliJ IDEA
  *
  * @author robin
- * @create 2019/1/31 17:54
+ * @create 2019/6/9 19:50
  */
 
-package com.UnionFind;
+package com3.UnionFind;
 
 import java.util.Random;
 
-/**
- * Created by robin on 2019/1/31.
- */
-public class Test {
-
+public class Main {
     private static double testUF(UF uf, int m){
 
         int size = uf.getSize();
@@ -38,7 +34,7 @@ public class Test {
     }
 
     public static void main(String[] args){
-        
+
         int size = 10000;
         int m = 10000;
 
@@ -48,18 +44,10 @@ public class Test {
 //        UnionFind2 u2 = new UnionFind2(size);
 //        System.out.println(testUF(u2, m));
 
-        UnionFind2 u3 = new UnionFind2(size);
+        UnionFind3 u3 = new UnionFind3(size);
         System.out.println(testUF(u3, m));
 
-        UnionFind2 u4 = new UnionFind2(size);
-        System.out.println(testUF(u4, m));
-
-        UnionFind2 u5 = new UnionFind2(size);
-        System.out.println(testUF(u5, m));
-
-        UnionFind2 u6 = new UnionFind2(size);
-        System.out.println(testUF(u6, m));
-
+                
     }
 
 }

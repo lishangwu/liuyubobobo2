@@ -2,16 +2,16 @@
  * Created by IntelliJ IDEA
  *
  * @author robin
- * @create 2019/1/28 02:00
+ * @create 2019/6/8 00:33
  */
 
-package com.Set;
+package com3.Set;
+
+import AInterface.Set;
+import com.Set.FileOperation;
 
 import java.util.ArrayList;
 
-/**
- * Created by robin on 2019/1/28.
- */
 public class Main {
 
     private static double testSet(Set<String> set, String filename){
@@ -27,7 +27,7 @@ public class Main {
         for (String s : words1) {
             set.add(s);
         }
-        System.out.println("Total different words: " + set.getSize());
+        System.out.println("Total different words:  " + set.getSize());
 
         long endTime = System.nanoTime();
 
@@ -38,18 +38,22 @@ public class Main {
     public static void main(String[] args){
 
         String filename = "pride-and-Prejudice.txt";
-        BSTSet<String> bstSet = new BSTSet<>();
+        Set<String> bstSet = new BSTSet<>();
         double time1 = testSet(bstSet, filename);
         System.out.println("BST BSTSet: " + time1 + "s");
 
         System.out.println();
 
-        LinkedListSet<String> linkedListSet = new LinkedListSet<>();
+        Set<String> linkedListSet = new LinkedListSet<>();
         double time2 = testSet(linkedListSet, filename);
+        System.out.println("BST linkedListSet: " + time2 + "s");
 
-        System.out.println("linked List BSTSet: " + time2 + "s");
+        System.out.println();
 
-
+        Set<String> avlSet = new AVLSet<>();
+        double time3 = testSet(avlSet, filename);
+        System.out.println("BST avlSet: " + time3 + "s");
+                
     }
 
 }

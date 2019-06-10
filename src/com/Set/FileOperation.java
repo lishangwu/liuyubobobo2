@@ -51,6 +51,7 @@ public class FileOperation {
             for(int i = start + 1; i <= contents.length();){
                 if(i == contents.length() || !Character.isLetter(contents.charAt(i))){
                     String word = contents.substring(start, i).toLowerCase();
+                    word = word.trim();
                     words.add(word);
                     start = firstCharacterIndex(contents, i);
                     i = start + 1;

@@ -97,7 +97,7 @@ public class Array<E> implements com2.Interface.Array<E> {
     public void set(int index, E e) {
 
         if(index < 0 || index > size)
-            throw new IllegalArgumentException("Set failed. Required index>=0 && index<=size");
+            throw new IllegalArgumentException("BSTSet failed. Required index>=0 && index<=size");
 
         data[index] = e;
     }

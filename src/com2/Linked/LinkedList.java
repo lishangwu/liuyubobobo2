@@ -95,7 +95,7 @@ public class LinkedList<E> {
 
     public void set(int index, E e){
         if(index < 0 || index > size)
-            throw new IllegalArgumentException("Set Failed, Illegal index.");
+            throw new IllegalArgumentException("BSTSet Failed, Illegal index.");
 
         Node cur = dummyHead.next;
         for (int i = 0; i < index; i++) {
