@@ -2,16 +2,16 @@
  * Created by IntelliJ IDEA
  *
  * @author robin
- * @create 2019/6/6 11:30
+ * @create 2019/6/12 20:58
  */
 
-package com3.BST;
+package com4.BST;
 
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class BST_2<E extends Comparable<E>> {
+public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
 
     private class Node{
         public E e;
@@ -27,48 +27,48 @@ public class BST_2<E extends Comparable<E>> {
     private Node root;
     private int size;
 
-    public BST_2() {
+    public BST() {
         root = null;
         size = 0;
     }
 
-    public int size(){
+    @Override
+    public int size() {
         return size;
     }
 
-    public boolean isEmpty(){
+    @Override
+    public boolean isEmpty() {
         return size == 0;
     }
 
-    public void add(E e){
+    @Override
+    public void add(E e) {
         root = add(root, e);
     }
 
     private Node add(Node node, E e) {
         if(node == null){
             size ++;
-            node = new Node(e);
-            return node;
+            return new Node(e);
         }
 
-        if(e.compareTo(node.e) < 0){
+        if(e.compareTo(node.left.e) < 0)
             node.left = add(node.left, e);
-        }else if(e.compareTo(node.e) > 0){
+        else if(e.compareTo(node.right.e) > 0)
             node.right = add(node.right, e);
-        }
 
         return node;
-
     }
 
-    public boolean contains(E e){
+    @Override
+    public boolean contains(E e) {
         return contains(root, e);
     }
 
     private boolean contains(Node node, E e) {
-        if(node == null){
+        if(node == null)
             return false;
-        }
 
         if(e.compareTo(node.e) == 0){
             return true;
@@ -79,14 +79,15 @@ public class BST_2<E extends Comparable<E>> {
         }
     }
 
-    public void preOrder(){
+    @Override
+    public void preOrder() {
         preOrder(root);
     }
 
     private void preOrder(Node node) {
-        if(node == null){
+        if(node == null)
             return;
-        }
+
         System.out.println(node.e);
         preOrder(node.left);
         preOrder(node.right);
@@ -98,41 +99,43 @@ public class BST_2<E extends Comparable<E>> {
         while (!stack.isEmpty()){
             Node cur = stack.pop();
             System.out.println(cur.e);
-            if(cur.right != null) stack.push(cur.right);
-            if(cur.left != null) stack.push(cur.left);
+            if(cur.right != null)
+                stack.push(cur.right);
+            if(cur.left != null)
+                stack.push(cur.left);
         }
     }
 
-    //中序遍历就是二分搜索树排序后的
-    public void inOrder(){
+    @Override
+    public void inOrder() {
         inOrder(root);
     }
 
     private void inOrder(Node node) {
-        if(node == null){
+        if(node == null)
             return;
-        }
 
-        inOrder(node.left);
+        preOrder(node.left);
         System.out.println(node.e);
-        inOrder(node.right);
+        preOrder(node.right);
     }
 
-    public void postOrder(){
+    @Override
+    public void postOrder() {
         postOrder(root);
     }
 
     private void postOrder(Node node) {
-        if(node == null){
+        if(node == null)
             return;
-        }
 
-        postOrder(node.left);
-        postOrder(node.right);
+        preOrder(node.left);
+        preOrder(node.right);
         System.out.println(node.e);
     }
 
-    public void levelOrder(){
+    @Override
+    public void levelOrder() {
         Queue<Node> q = new LinkedList<>();
         q.add(root);
         while (!q.isEmpty()){
@@ -145,37 +148,35 @@ public class BST_2<E extends Comparable<E>> {
         }
     }
 
-    public E minimum(){
-        if(size == 0){
-            throw new IllegalArgumentException("BST is empty!");
-        }
-
+    @Override
+    public E minimum() {
+        if(size == 0)
+            throw new IllegalArgumentException("BST is empty");
         return minimum(root).e;
     }
 
     private Node minimum(Node node) {
-        if(node.left == null){
+        if(node.left == null)
             return node;
-        }
         return minimum(node.left);
+
     }
 
-    public E maxmum(){
-        if(size == 0){
-            throw new IllegalArgumentException("BST is empty!");
-        }
-
+    @Override
+    public E maxmum() {
+        if(size == 0)
+            throw new IllegalArgumentException("BST is empty");
         return maxmum(root).e;
     }
 
     private Node maxmum(Node node) {
-        if(node.right == null){
+        if(node.right == null)
             return node;
-        }
         return maxmum(node.right);
     }
 
-    public E removeMin(){
+    @Override
+    public E removeMin() {
         E ret = minimum();
         root = removeMin(root);
         return ret;
@@ -189,11 +190,12 @@ public class BST_2<E extends Comparable<E>> {
             return rightNode;
         }
 
-        node.left = removeMin(node.left);
+        node.left = removeMin(node);
         return node;
     }
 
-    public E removeMax(){
+    @Override
+    public E removeMax() {
         E ret = maxmum();
         root = removeMax(root);
         return ret;
@@ -206,19 +208,18 @@ public class BST_2<E extends Comparable<E>> {
             size --;
             return leftNode;
         }
-
-        node.right = removeMax(node.right);
+        node.right = removeMax(node);
         return node;
     }
 
-    public void remove(E e){
+    @Override
+    public void remove(E e) {
         root = remove(root, e);
     }
 
     private Node remove(Node node, E e) {
-        if(node == null){
+        if(node == null)
             return node;
-        }
 
         if(e.compareTo(node.e) < 0){
             node.left = remove(node.left, e);
@@ -226,13 +227,12 @@ public class BST_2<E extends Comparable<E>> {
         }else if(e.compareTo(node.e) > 0){
             node.right = remove(node.right, e);
             return node;
-        }else{
+        }else {
             if(node.left == null){
                 Node rightNode = node.right;
                 node.right = null;
                 size --;
                 return rightNode;
-
             }
             if(node.right == null){
                 Node leftNode = node.left;
@@ -240,45 +240,36 @@ public class BST_2<E extends Comparable<E>> {
                 size --;
                 return leftNode;
             }
-
             Node successor = minimum(node.right);
             successor.right = removeMin(node.right);
             successor.left = node.left;
 
             node.left = node.right = null;
             return successor;
+
         }
+
     }
 
     @Override
-    public String toString() {
+    public boolean hasPathSum(int sum) {
 
         StringBuilder res = new StringBuilder();
-        generateBSTString(root, 0, res);
-        return res.toString();
+
+        return root != null && findPathSum(root, sum ,res);
     }
 
-    private void generateBSTString(Node node, int depth, StringBuilder res) {
-        if(node == null){
-            res.append(generateDepthString(depth) + "null\n");
-            return;
+    private boolean findPathSum(Node node, int sum, StringBuilder res) {
+        if(node == null)
+            return false;
+
+        sum = sum - (Integer) node.e;
+        res.append(node.e + "->");
+        if(sum == 0 && node.left == null && node.right == null){
+            System.out.println(res);
+            return true;
         }
 
-        res.append(generateDepthString(depth) + node.e + "\n");
-
-        generateBSTString(node.left, depth + 1, res);
-        generateBSTString(node.right, depth + 1, res);
-    }
-
-    private String generateDepthString(int depth) {
-        StringBuilder res = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            res.append("--");
-        }
-        return res.toString();
-    }
-
-    public void print(){
-        System.out.println(this);
+        return findPathSum(node.left, sum, res) || findPathSum(node.right, sum, res);
     }
 }
