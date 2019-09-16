@@ -2,15 +2,12 @@
  * Created by IntelliJ IDEA
  *
  * @author robin
- * @create 2019/2/22 02:28
+ * @create 2019/6/22 12:45
  */
 
-package com2.Array;
+package com5.Array;
 
-/**
- * Created by robin on 2019/2/22.
- */
-public class Array<E> implements com2.Interface.Array<E> {
+public class Array<E> implements AInterface.Array<E> {
 
     private E[] data;
     private int size;
@@ -22,14 +19,6 @@ public class Array<E> implements com2.Interface.Array<E> {
 
     public Array() {
         this(10);
-    }
-
-    public Array(E[] arr) {
-        data = (E[]) new Object[arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            data[i] = arr[i];
-        }
-        size = arr.length;
     }
 
     @Override
@@ -59,33 +48,36 @@ public class Array<E> implements com2.Interface.Array<E> {
 
     @Override
     public void add(int index, E e) {
-
         if(index < 0 || index > size)
-            throw new IllegalArgumentException("AddLast failed. Required index>=0 && index<=size");
+            throw new IllegalArgumentException("Add failed. Required index>=0 && index<=size");
 
         if(size == data.length)
-            resize(2 * data.length);
+            resize(data.length * 2);
 
-        for (int i = size - 1; i >= index; i--)
+//        错误
+//        for (int i=index + 1; i < size; i++)
+//            data[i+1] = data[i];
+
+        //care
+        for (int i=size - 1; i >= index; i--)
             data[i+1] = data[i];
 
         data[index] = e;
-        size ++;
-
+        size++;
     }
+
+
 
     @Override
     public E get(int index) {
-
         if(index < 0 || index > size)
             throw new IllegalArgumentException("Get failed. Required index>=0 && index<=size");
-
         return data[index];
     }
 
     @Override
     public E getLast() {
-        return get(size-1);
+        return get(size - 1);
     }
 
     @Override
@@ -95,9 +87,8 @@ public class Array<E> implements com2.Interface.Array<E> {
 
     @Override
     public void set(int index, E e) {
-
-        if(index < 0 || index > size)
-            throw new IllegalArgumentException("BSTSet failed. Required index>=0 && index<=size");
+        if(index < 0 || index >= size)
+            throw new IllegalArgumentException("Set failed. Required index>=0 && index<size");
 
         data[index] = e;
     }
@@ -122,19 +113,20 @@ public class Array<E> implements com2.Interface.Array<E> {
 
     @Override
     public E remove(int index) {
-
-        if(index < 0 || index > size)
-            throw new IllegalArgumentException("Remove failed. Required index>=0 && index<=size");
+        if(index < 0 || index >= size)
+            throw new IllegalArgumentException("Remove failed. Required index>=0 && index<size");
 
         E ret = data[index];
-
-        for (int i = index + 1; i < size; i++)
-            data[i] = data[i+1];
+        for (int i = index + 1; i < size; i++) {
+            data[i-1] = data[i];
+        }
 
         size --;
+        data[size] = null;
 
-        if(size == data.length / 4 && data.length / 2 != 0)
-            resize(data.length / 2);
+        if (size == data.length/4 && data.length/2 != 0) {
+            resize(data.length/2);
+        }
 
         return ret;
     }
@@ -146,28 +138,27 @@ public class Array<E> implements com2.Interface.Array<E> {
 
     @Override
     public E removeLast() {
-        return remove(size-1);
+        return remove(size - 1);
     }
 
     @Override
     public void removeElement(E e) {
         int index = find(e);
-        if (index != -1)
+        if(index != -1)
             remove(index);
     }
 
-    @Override
-    public void resize(int newCapacity) {
+    private void resize(int newCapacity) {
         E[] newData = (E[]) new Object[newCapacity];
-        for (int i=0; i<size; i++)
+        for (int i = 0; i < size; i++) {
             newData[i] = data[i];
+        }
 
         data = newData;
     }
 
     @Override
     public void swap(int i, int j) {
-
         if(i < 0 || i>= size || j < 0 || j >= size)
             throw new IllegalArgumentException("Index is illegal.");
 
@@ -177,15 +168,18 @@ public class Array<E> implements com2.Interface.Array<E> {
     }
 
     @Override
+    public void print() {
+        System.out.println(this);
+    }
+
+    @Override
     public String toString() {
-
         StringBuilder res = new StringBuilder();
-        res.append(String.format("ArrayTest: size = %d, capacity = %d", size, data.length));
+        res.append(String.format("ArrayTest: size = %d, capacity = %d\n", size, data.length));
         res.append("[");
-
         for (int i = 0; i < size; i++) {
             res.append(data[i]);
-            if (i != size - 1)
+            if(i != size - 1)
                 res.append(", ");
         }
 
