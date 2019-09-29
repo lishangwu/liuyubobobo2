@@ -2,67 +2,104 @@
  * Created by IntelliJ IDEA
  *
  * @author robin
- * @create 2019/6/4 03:40
+ * @create 2019/9/26 19:31
  */
 
-package com3.BST;
+package com6.RedBlackTree;
+
 
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+//红黑树基于二分搜索树
+public class RBTree2<E extends Comparable<E>> {
 
-public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
-
-    private class Node{
+    public static final boolean RED = true;
+    public static final boolean BLACK = false;
+    private class Node {
         public E e;
         public Node left, right;
+        public boolean color;
 
         public Node(E e) {
             this.e = e;
             left = null;
             right = null;
+            color = RED;
         }
     }
 
     private Node root;
     private int size;
 
-    public BST() {
+    public RBTree2() {
         root = null;
         size = 0;
     }
 
-    @Override
+    private boolean isRed(Node node){
+        return node == null ? BLACK : node.color;
+    }
+
     public int size() {
         return size;
     }
 
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    @Override
+    private Node leftRotate(Node node){
+        Node x = node.right;
+        node.right = x.left;
+        x.left = node;
+        x.color = node.color;
+        node.color = RED;
+        return x;
+    }
+    private Node rightRotate(Node node){
+        Node x = node.left;
+        node.left = x.right;
+        x.right = node;
+        x.color = node.color;
+        node.color = RED;
+        return x;
+    }
+    private void flipColors(Node node){
+        node.color = RED;
+        node.left.color = BLACK;
+        node.right.color = BLACK;
+    }
+
     public void add(E e) {
         root = add(root, e);
+        root.color = BLACK;
     }
 
     private Node add(Node node, E e) {
-
         if(node == null){
-            size ++;
+            size++;
             return new Node(e);
         }
 
-        if(e.compareTo(node.e) < 0)
+        if(e.compareTo(node.e) < 0){
             node.left = add(node.left, e);
-        else if(e.compareTo(node.e) > 0)
-            node.right = add(node.right, e);
+        }else if(e.compareTo(node.e) > 0){
+            node.right = add(node.right,e);
+        }
+
+        if(isRed(node.right) && !isRed(node.left))
+            node = leftRotate(node);
+
+        if(isRed(node.left) && isRed(node.left.left))
+            node = rightRotate(node);
+
+        if(isRed(node.left) && isRed(node.right))
+            flipColors(node);
 
         return node;
     }
 
-    @Override
     public boolean contains(E e) {
         return contains(root, e);
     }
@@ -75,11 +112,9 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
             return contains(node.left, e);
         else if(e.compareTo(node.e) > 0)
             return contains(node.right, e);
-        else
-            return true;
+        return true;
     }
 
-    @Override
     public void preOrder() {
         preOrder(root);
     }
@@ -93,6 +128,7 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
         preOrder(node.right);
     }
 
+    //前序非递归方式
     public void preOrderNR(){
         Stack<Node> stack = new Stack<>();
         stack.push(root);
@@ -106,7 +142,6 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
         }
     }
 
-    @Override
     public void inOrder() {
         inOrder(root);
     }
@@ -120,7 +155,6 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
         inOrder(node.right);
     }
 
-    @Override
     public void postOrder() {
         postOrder(root);
     }
@@ -134,14 +168,12 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
         System.out.println(node.e);
     }
 
-    @Override
     public void levelOrder() {
         Queue<Node> q = new LinkedList<>();
         q.add(root);
         while (!q.isEmpty()){
             Node cur = q.remove();
             System.out.println(cur.e);
-
             if(cur.left != null)
                 q.add(cur.left);
             if(cur.right != null)
@@ -149,26 +181,22 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
         }
     }
 
-    @Override
     public E minimum() {
-
         if(size == 0)
-            throw new IllegalArgumentException("BST is empty");
-
+            throw new IllegalArgumentException("BAT is empty");
         return minimum(root).e;
     }
 
     private Node minimum(Node node) {
         if(node.left == null)
             return node;
+
         return minimum(node.left);
     }
 
-    @Override
     public E maxmum() {
         if(size == 0)
-            throw new IllegalArgumentException("BST is empty");
-
+            throw new IllegalArgumentException("BAT is empty");
         return maxmum(root).e;
     }
 
@@ -176,7 +204,6 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
         return node.right == null ? node : maxmum(node.right);
     }
 
-    @Override
     public E removeMin() {
         E ret = minimum();
         root = removeMin(root);
@@ -187,15 +214,13 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
         if(node.left == null){
             Node rightNode = node.right;
             node.right = null;
-            size --;
+            size--;
             return rightNode;
         }
-
         node.left = removeMin(node.left);
         return node;
     }
 
-    @Override
     public E removeMax() {
         E ret = maxmum();
         root = removeMax(root);
@@ -206,23 +231,51 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
         if(node.right == null){
             Node leftNode = node.left;
             node.left = null;
-            size --;
+            size--;
             return leftNode;
         }
-
-        node.right = removeMax(node.right);
+        node.right = removeMin(node.right);
         return node;
     }
 
-    @Override
     public void remove(E e) {
-
+        root = remove(root, e);
     }
 
-    @Override
+    private Node remove(Node node, E e) {
+        if(node == null)
+            return node;
+
+        if(e.compareTo(node.e) < 0){
+            node.left = remove(node.left, e);
+            return node;
+        }else if(e.compareTo(node.e) > 0){
+            node.right = remove(node.right, e);
+            return node;
+        }else {
+            if(node.left == null){
+                Node rightNode = node.right;
+                node.right = null;
+                size--;
+                return rightNode;
+            }
+            if(node.right == null){
+                Node leftNode = node.left;
+                node.left = null;
+                size--;
+                return leftNode;
+            }
+            Node successor = minimum(node.right);
+            successor.right = removeMin(node.right);
+            successor.left = node.left;
+
+            node.left = node.right = null;
+            return successor;
+        }
+    }
+
     public boolean hasPathSum(int sum) {
         StringBuilder res = new StringBuilder();
-
         return root != null && findPathSum(root, sum, res);
     }
 
@@ -231,15 +284,11 @@ public class BST<E extends Comparable<E>> implements AInterface.BST<E> {
             return false;
 
         sum = sum - (Integer) node.e;
-
         res.append(node.e + "->");
         if(sum == 0 && node.left == null && node.right == null){
             System.out.println(res);
             return true;
         }
-
         return findPathSum(node.left, sum, res) || findPathSum(node.right, sum, res);
     }
-
-
 }

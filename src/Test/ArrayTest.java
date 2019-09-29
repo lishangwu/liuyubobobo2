@@ -7,13 +7,11 @@
 
 package Test;
 
-import com5.Array.Array;
+import com6.Array.Array;
 
 public class ArrayTest {
 
     public static void main(String[] args){
-
-
         Array<Integer> arr = new Array<>();
 
         for (int i = 0; i < 10; i++) {
